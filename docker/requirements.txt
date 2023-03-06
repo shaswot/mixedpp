@@ -1,0 +1,14 @@
+jupyterlab
+pandas
+scipy
+matplotlib
+seaborn
+ipywidgets
+pyyaml
+natsort
+scikit-learn
+scikit-image
+autopep8
+ipynbname
+bitarray
+gitpython
