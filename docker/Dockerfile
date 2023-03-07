@@ -17,11 +17,11 @@ RUN apt-get -yqq install \
         git \
         openssh-server \
         htop \
+	nvtop \
         wget \
         net-tools \
         && apt-get clean \
         && rm -rf /var/lib/apt/lists/*
-
 
 # set a directory for the repos 
 RUN mkdir -p /repos/mixedpp
@@ -47,6 +47,12 @@ EXPOSE 8888
 # Change workdir to root so that Jupyter Lab can access the /stash folder
 # /stash folder stores large dumpfiles that can be accessed from the host computer
 WORKDIR /
+
+
+# create non-root user
+RUN groupadd -g 999 appuser && \
+    useradd -r -u 999 -g appuser appuser
+USER appuser
 
 # run bash shell
 # start jupyter lab once inside the container using screen
