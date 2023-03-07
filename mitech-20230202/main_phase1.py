@@ -12,6 +12,7 @@ from mp_layers import MPDense
 
 MODEL_FILE = "fc_net.h5"
 MPMAT_FILE = "mpmat.csv"
+
 LAYER_IDX = -1       # index of FC layer chosen to be in mixed-precision
                      # -1 means the last layer
 
@@ -37,6 +38,14 @@ def main():
         print(f"Mixed-precision matrix file not found -> randomly create one")
         mp_mat = create_random_mpmat(size=W.shape)
         mpmat_to_csv(mp_mat, MPMAT_FILE)
+        
+        # Additional code to generate mpmat with the same precision for all entries
+        ###############
+        for precision in list(SUPPORTED_PRECISIONS):
+            mp_mat2 = create_random_mpmat(size=W.shape, choices=[precision])
+            MPMAT_FILE = "mpmat_" + precision + ".csv"
+            mpmat_to_csv(mp_mat2, MPMAT_FILE)
+        ###############
 
     new_mp_dense = MPDense.from_normal_dense(chosen_layer, mp_mat)
     layer_list = list(orig_model.layers)
