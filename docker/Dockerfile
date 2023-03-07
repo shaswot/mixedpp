@@ -17,7 +17,6 @@ RUN apt-get -yqq install \
         git \
         openssh-server \
         htop \
-	nvtop \
         wget \
         net-tools \
         && apt-get clean \
