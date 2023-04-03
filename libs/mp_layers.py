@@ -2,7 +2,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 
-from mixed_precision import get_tf_type, get_quant_fn, get_dequant_fn
+from .mixed_precision import get_tf_type, get_quant_fn, get_dequant_fn
 
 
 def create_mask(mp_mat, prec):
@@ -45,8 +45,8 @@ class MPDense(keras.layers.Layer):
         self.masks = { p: create_mask(self.mp_mat, p)
                       for p in self.reduced_precs}
 
-    def _matmul_in_reduced_prec(self, x, prec):
-        assert x.dtype is tf.dtypes.float32
+    def _matmul_in_int(self, x, prec):
+        assert prec.startswith('INT')
 
         quantize = get_quant_fn(prec)
         dequantize = get_dequant_fn(prec)
@@ -54,7 +54,32 @@ class MPDense(keras.layers.Layer):
 
         quant_x = quantize(x)
         quant_w = tf.math.multiply(quantize(self.w), mask)
-        return dequantize(tf.matmul(quant_x, quant_w))
+
+        # tf.matmul only support int32 and int64, 
+        # so cast to int32, do multiplication in int32,
+        # and then cast back to `prec`
+        quant_x_32 = tf.cast(quant_x, dtype=tf.dtypes.int32)
+        quant_w_32 = tf.cast(quant_w, dtype=tf.dtypes.int32)
+
+        output_32 = tf.matmul(quant_x_32, quant_w_32)
+        output = tf.cast(output_32, dtype=get_tf_type(prec))
+        return dequantize(output)
+
+    def _matmul_in_reduced_prec(self, x, prec):
+        assert x.dtype is tf.dtypes.float32
+
+        if prec.startswith('INT'):
+            # int types are handled differently
+            return self._matmul_in_int(x, prec)
+
+        quantize = get_quant_fn(prec)
+        dequantize = get_dequant_fn(prec)
+        mask = self.masks.get(prec)
+
+        quant_x = quantize(x)
+        quant_w = tf.math.multiply(quantize(self.w), mask)
+        output = tf.matmul(quant_x, quant_w)
+        return dequantize(output)
 
     def call(self, input):
         return tf.add_n(

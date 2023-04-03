@@ -57,7 +57,7 @@ def lenet(input_shape, nb_classes):
             layers.Dense(84, activation='relu'),
             layers.Dense(nb_classes, activation='softmax'),
         ],
-        name='lenet',
+        name='lenetA',
     )
 
 
