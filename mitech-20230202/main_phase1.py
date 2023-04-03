@@ -13,6 +13,8 @@ from mixed_precision import SUPPORTED_PRECISIONS
 
 MODEL_FILE = "fc_net.h5"
 # MPMAT_FILE = "mpmat.csv"
+# MPMAT_FILE = "mpmat_BF16.csv"
+# MPMAT_FILE = "mpmat_FP16.csv"
 MPMAT_FILE = "mpmat_TF32.csv"
 
 
