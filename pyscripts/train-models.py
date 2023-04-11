@@ -92,7 +92,8 @@ for seed in model_seeds:
     print("Original Accuracy: ",score)
 
     # save model
-    model_instance = dataset + "--" + model_arch + "-" + str(seed)
+    model_type = dataset + "--" + model_arch
+    model_instance = model_type + "-" + str(seed)
     model_filename = model_instance + ".h5"
     model_subdir = pathlib.Path(MODELS_FOLDER / model_arch)
     pathlib.Path(model_subdir).mkdir(parents=True, exist_ok=True)
