@@ -156,6 +156,120 @@ def resnet_v2(input_shape, depth, num_classes):
 
                  
 ###########################################
+def vgg16F(input_shape, nb_classes):
+    # https://www.geeksforgeeks.org/cifar-10-image-classification-in-tensorflow/
+    # https://stackoverflow.com/questions/60883928/quantization-aware-training-in-tensorflow-version-2-and-batchnorm-folding
+    return models.Sequential(
+        [
+            # 1st Conv Block
+            layers.Conv2D(filters=64, kernel_size=3, padding='same', input_shape=input_shape),
+            layers.BatchNormalization(),
+            layers.Activation('relu'),
+            
+            layers.Dropout(0.3),
+            
+            layers.Conv2D(filters=64, kernel_size=3, padding='same'),
+            layers.BatchNormalization(),
+            layers.Activation('relu'),
+            
+            layers.MaxPool2D(pool_size=2, strides=2, padding='same'),
+            
+            # 2nd Conv Block
+            layers.Conv2D(filters=128, kernel_size=3, padding='same'),
+            layers.BatchNormalization(),
+            layers.Activation('relu'),
+            
+            layers.Dropout(0.4),
+            
+            layers.Conv2D(filters=128, kernel_size=3, padding='same'),
+            layers.BatchNormalization(),
+            layers.Activation('relu'),
+            
+            layers.MaxPool2D(pool_size=2, strides=2, padding='same'),
+            
+            # 3rd Conv Block
+            layers.Conv2D(filters=256, kernel_size=3, padding='same'),
+            layers.BatchNormalization(),
+            layers.Activation('relu'),
+            
+            layers.Dropout(0.4),
+            
+            layers.Conv2D(filters=256, kernel_size=3, padding='same'),
+            layers.BatchNormalization(),
+            layers.Activation('relu'),
+            
+            layers.Dropout(0.4),
+            
+            layers.Conv2D(filters=256, kernel_size=3, padding='same'),
+            layers.BatchNormalization(),
+            layers.Activation('relu'),
+            
+            layers.MaxPool2D(pool_size=2, strides=2, padding='same'),
+            
+            # 4th Conv Block
+            layers.Conv2D(filters=512, kernel_size=3, padding='same'),
+            layers.BatchNormalization(),
+            layers.Activation('relu'),
+            
+            layers.Dropout(0.4),
+            
+            layers.Conv2D(filters=512, kernel_size=3, padding='same'),
+            layers.BatchNormalization(),
+            layers.Activation('relu'),
+            
+            layers.Dropout(0.4),
+            
+            layers.Conv2D(filters=512, kernel_size=3, padding='same'),
+            layers.BatchNormalization(),
+            layers.Activation('relu'),
+            
+            layers.MaxPool2D(pool_size=2, strides=2, padding='same'),
+            
+            # 5th Conv Block
+            layers.Conv2D(filters=512, kernel_size=3, padding='same'),
+            layers.BatchNormalization(),
+            layers.Activation('relu'),
+            
+            layers.Dropout(0.4),
+            
+            layers.Conv2D(filters=512, kernel_size=3, padding='same'),
+            layers.BatchNormalization(),
+            layers.Activation('relu'),
+            
+            layers.Dropout(0.4),
+            
+            layers.Conv2D(filters=512, kernel_size=3, padding='same'),
+            layers.BatchNormalization(),
+            layers.Activation('relu'),
+            
+            layers.MaxPool2D(pool_size=2, strides=2, padding='same'),
+            # layers.Dropout(0.4),
+            
+            # Dense Layers
+            layers.Flatten(),
+            layers.Dropout(0.5),
+            
+            layers.Dense(units=4096),
+            layers.BatchNormalization(),
+            layers.Activation('relu'),
+            
+            layers.Dropout(0.5),
+            
+            layers.Dense(units=4096),
+            layers.BatchNormalization(),
+            layers.Activation('relu'),
+            
+            layers.Dropout(0.5),
+            
+            layers.Dense(units=1000),
+            layers.BatchNormalization(),
+            layers.Activation('relu'),
+            
+            layers.Dense(units=nb_classes, activation='softmax')
+        ],
+        name='vgg16F',
+    )
+
 def vgg16E(input_shape, nb_classes):
     # https://www.geeksforgeeks.org/cifar-10-image-classification-in-tensorflow/
     return models.Sequential(
