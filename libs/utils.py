@@ -3,14 +3,15 @@ from tensorflow import keras
 
 from .mixed_precision import SAFE_FLOAT_RANGE
 
-def prepare_cifar100():
+def prepare_cifar100(to_categorical=True):
     (x_train, y_train), (x_test, y_test) = keras.datasets.cifar100.load_data()
     x_train = x_train.astype(np.float32) / 255.0
     x_test = x_test.astype(np.float32) / 255.0
 
-    n_classes = len(np.unique(y_train))
-    y_train = keras.utils.to_categorical(y_train, num_classes=n_classes)
-    y_test = keras.utils.to_categorical(y_test, num_classes=n_classes)
+    if to_categorical:
+        n_classes = len(np.unique(y_train))
+        y_train = keras.utils.to_categorical(y_train, num_classes=n_classes)
+        y_test = keras.utils.to_categorical(y_test, num_classes=n_classes)
     
     # data augmentation
     datagen = keras.preprocessing.image.ImageDataGenerator(
@@ -38,19 +39,20 @@ def prepare_cifar100():
     
     return (x_train, y_train), (x_test, y_test)
 
-def prepare_cifar10():
+def prepare_cifar10(to_categorical=True, samplewise_center=False):
     (x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
     x_train = x_train.astype(np.float32) / 255.0
     x_test = x_test.astype(np.float32) / 255.0
 
-    n_classes = len(np.unique(y_train))
-    y_train = keras.utils.to_categorical(y_train, num_classes=n_classes)
-    y_test = keras.utils.to_categorical(y_test, num_classes=n_classes)
+    if to_categorical:
+        n_classes = len(np.unique(y_train))
+        y_train = keras.utils.to_categorical(y_train, num_classes=n_classes)
+        y_test = keras.utils.to_categorical(y_test, num_classes=n_classes)
     
     # data augmentation
     datagen = keras.preprocessing.image.ImageDataGenerator(
     featurewise_center=False,  # set input mean to 0 over the dataset
-    samplewise_center=False,  # set each sample mean to 0
+    samplewise_center=samplewise_center,  # set each sample mean to 0
     featurewise_std_normalization=False,  # divide inputs by std of the dataset
     samplewise_std_normalization=False,  # divide each input by its std
     zca_whitening=False,  # apply ZCA whitening

@@ -4,6 +4,7 @@ from tensorflow.keras import models, layers, regularizers
 
 ###########################################
 # Basic ResNet Building Block
+# https://keras.io/zh/examples/cifar10_resnet/
 def resnet_layer(inputs,
 				num_filters=16,
 				kernel_size=3,
@@ -404,7 +405,6 @@ def vgg16D(input_shape, nb_classes):
         name='vgg16D',
     )
 
-
 def vgg16C(input_shape, nb_classes):
     # https://www.geeksforgeeks.org/cifar-10-image-classification-in-tensorflow/
     return models.Sequential(
@@ -467,6 +467,7 @@ def vgg16C(input_shape, nb_classes):
         ],
         name='vgg16C',
     )
+
 def vgg16B(input_shape, nb_classes):
     # https://www.geeksforgeeks.org/cifar-10-image-classification-in-tensorflow/
     return models.Sequential(
@@ -523,6 +524,7 @@ def vgg16B(input_shape, nb_classes):
         ],
         name='vgg16B',
     )
+
 def vgg16A(input_shape, nb_classes):
     # https://www.geeksforgeeks.org/cifar-10-image-classification-in-tensorflow/
     return models.Sequential(
